@@ -1,18 +1,22 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
-
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity()
-// @Entity({ repository: ()=> ProductRepository })
 export class Product {
     @PrimaryKey()
     id!: number;
 
     @Property()
-    title: string;
+    title!: string;
 
     @Property()
-    price: number;
+    price!: number;
 
-    @Property({nullable: true})
-    description: string;
+    @Property()
+    description!: string;
+
+    constructor(title: string, price: number, description: string) {
+        this.title = title;
+        this.price = price;
+        this.description = description;
+    }
 }

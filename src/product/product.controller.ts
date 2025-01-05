@@ -11,19 +11,18 @@ export class ProductController {
 
   @Post()
   @ApiBody({ type: CreateProductDto })
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  async create(@Body() createProductDto: CreateProductDto) {
+    return await this.productService.create(createProductDto);
   }
 
   @Get()
-  @ApiBody({ type: CreateProductDto })
-  findAll() {
-    return this.productService.findAll();
+  async findAll() {
+    return await this.productService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+ async findOne(@Param('id') id: string) {
+    return await this.productService.findOne(+id);
   }
 
   @Patch(':id')
