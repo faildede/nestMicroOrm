@@ -3,11 +3,11 @@ version: '3.8'
 services:
   db:
     image: postgres:latest
-    container_name: postgres_container
+    container_name: postgres_db
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: adimin
       POSTGRES_DB: db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminexample
     ports:
       - "5432:5432"
     volumes:

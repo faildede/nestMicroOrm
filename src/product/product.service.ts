@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CreateRequestContext, MikroORM, EntityManager } from '@mikro-orm/postgresql';
-
+import { Product } from './entities/product.entity';
 
 @Injectable()
 export class ProductService {
@@ -12,25 +12,34 @@ export class ProductService {
   ) {}
 
   @CreateRequestContext()
-  create(createProductDto: CreateProductDto) {
-    const em = this.orm.em.fork();
-    
-    return ;
+  async create(createProductDto: CreateProductDto) {
+    const product = this.em.create(Product, createProductDto);
+    await this.em.persistAndFlush(product);
+    return product;
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAll() {
+    return await this.em.find(Product, {});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number) {
+    const product = await this.em.findOne(Product, { id });
+    if (!product) {
+      throw new NotFoundException(`Product with id ${id} not found`);
+    }
+    return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    const product = await this.findOne(id);
+    this.em.assign(product, updateProductDto);
+    await this.em.persistAndFlush(product);
+    return product;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: number) {
+    const product = await this.findOne(id);
+    await this.em.removeAndFlush(product);
+    return { message: `Product with id ${id} has been removed` };
   }
 }
